@@ -1,3 +1,6 @@
+import scala.collection.mutable.MutableList
+import scala.util.Random
+
 /* Some quick and dirty elevator implementation */
 
 case class Elevator(floor: Int, capacity: Int, name: String, dir: Int => Int) {
