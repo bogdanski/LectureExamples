@@ -12,10 +12,6 @@ case class Elevator(floor: Int, capacity: Int, name: String, dir: Int => Int) {
  * System containing elevators
  */
 class System(n: Int) {
-  
-  /*
-   * Private Values
-   */
   private val up: Int => Int = i => i+1
   private val down: Int => Int = i => i-1
   private val move: (Elevator => Elevator) = e => {
@@ -26,14 +22,10 @@ class System(n: Int) {
     }
   }
   
-  /*
-   * Construction
-   */
+  /* construction */
   private val elevators = new MutableList[Elevator]
   for(i <- 1 to n) elevators += Elevator(Random.nextInt(7) + 2, 5, s"Elevator $i", up)
-  
-  /*
-   * Public
-   */
+
+  /* let it run */
   def tick = elevators foreach { x => elevators.update(elevators.indexOf(x), move(x)) }
 }
