@@ -2,7 +2,7 @@ import scala.collection.mutable.MutableList
 import scala.util.Random
 
 /**
- * Elevator implementation
+ * Some quick and dirty elevator implementation
  */
 case class Elevator(floor: Int, capacity: Int, name: String, dir: Int => Int) {
   println(s"Hello from $name! Current floor is $floor. I can carry $capacity people.")
