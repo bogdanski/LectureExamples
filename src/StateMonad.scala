@@ -1,7 +1,4 @@
 /**
- * State Monad to pass state during monadic chaining of function calls.
- * Examples: Counting duration, continual discrete world state, ...
- *
  * @author bogdanski
  * @since 22.07.15
  */
@@ -19,7 +16,7 @@ trait Functor[A, F[_]] {
 /**
  * Common Higher Functor Trait
  * @tparam A bound tpe
- * @tparam M is A embracing type
+ * @tparam M embraces A
  * @tparam F resulting type
  */
 trait HigherFunctor[A, M[+_], F[_[_]]] {
@@ -41,8 +38,8 @@ trait MultiFunctor[A, State, F[_, _]] extends Functor[A, ({type λ[α] = F[α, S
 /**
  * Higher Multi-Functor Trait
  * @tparam K embraced value type
- * @tparam A is K embracing type
- * @tparam State
+ * @tparam A embraces K
+ * @tparam State type
  */
 trait HigherMultiFunctor[K, A[+_], State] extends HigherFunctor[K, A, ({type λ[α[+_]] = HigherMultiFunctor[_, α, State]})#λ] {
   def map[B](f: K => B): HigherMultiFunctor[B, A, State]
@@ -52,11 +49,11 @@ trait HigherMultiFunctor[K, A[+_], State] extends HigherFunctor[K, A, ({type λ[
 /**
  * State Monad to pass state during monadic chaining of function calls.
  * Examples: Counting duration, continual discrete world state, ...
- * @param value item this Monad is holding
+ * @param value item this monad is holding
  * @param state current state this Monad is in
  * @param stateTrans function to perform state transmission
  * @tparam A bound type
- * @tparam State type to pass between
+ * @tparam State type
  */
 case class StateMonad[A, State](value: A, state: State, stateTrans: State => State) extends MultiFunctor[A, State, StateMonad] {
   def map[B](f: A => B): StateMonad[B, State] = StateMonad(f(value), stateTrans(state), stateTrans)
@@ -65,6 +62,14 @@ case class StateMonad[A, State](value: A, state: State, stateTrans: State => Sta
   def zipMap[B](f: A => B): StateMonad[(B, State), State] = StateMonad((f(value), state), stateTrans(state), stateTrans)
 }
 
+/**
+ *
+ * @param list within this Monad
+ * @param state current state this monad is in
+ * @param stateTrans function to perform state transmission
+ * @tparam A embraces K
+ * @tparam State type
+ */
 case class ListStateMonad[A, State](list: List[A], state: State, stateTrans: State => State) extends HigherMultiFunctor[A, List, State] {
   def map[B](f: A => B): ListStateMonad[B, State] = ListStateMonad(list map f, stateTrans(state), stateTrans)
   def flatMap[B](f: A => List[B]): ListStateMonad[B, State] = ListStateMonad(list flatMap f, stateTrans(state), stateTrans)
