@@ -66,10 +66,10 @@ object Diff {
 
 object Main extends App {
 
-  val two = Sum[_0, _1, _1]
+  val a = Sum[_0, _1, _1]
 
-  println(two)
+  println(a)
 
-  val one = Diff[_5, _0, _5]
+  val b = Diff[_5, _0, _5]
 
 }
